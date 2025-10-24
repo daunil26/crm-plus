@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16
+    container_name: crmplus-db
+    environment:
+      POSTGRES_DB: crmplus
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: crm
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm -d crmplus"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:
