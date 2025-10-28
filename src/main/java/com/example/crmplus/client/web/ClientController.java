@@ -5,9 +5,11 @@ import com.example.crmplus.client.model.Client;
 import com.example.crmplus.client.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 import jakarta.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/clients")
@@ -19,10 +21,12 @@ public class ClientController {
         this.service = service;
     }
 
-    // GET /api/v1/clients?status=ACTIVE|INACTIVE
     @GetMapping
-    public List<ClientDto> list(@RequestParam(required = false) Client.Status status) {
-        return service.list(status);
+    public Page<ClientDto> list(
+            @RequestParam(required = false) Client.Status status,
+            @PageableDefault(size = 10, sort = "id", direction = org.springframework.data.domain.Sort.Direction.DESC)
+            Pageable pageable) {
+        return service.list(status, pageable);
     }
 
     // POST /api/v1/clients

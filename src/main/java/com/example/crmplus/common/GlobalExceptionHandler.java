@@ -33,4 +33,12 @@ public class GlobalExceptionHandler {
                 "details", errors
         ));
     }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleConflict(org.springframework.dao.DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "error", "Conflict",
+                "message", "Data integrity violation (e.g., duplicate value)"
+        ));
+    }
 }

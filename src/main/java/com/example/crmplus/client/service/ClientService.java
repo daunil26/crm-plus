@@ -5,6 +5,8 @@ import com.example.crmplus.client.mapper.ClientMapper;
 import com.example.crmplus.client.model.Client;
 import com.example.crmplus.client.repository.ClientRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,11 +19,18 @@ public class ClientService {
         this.repo = repo;
     }
 
-    public List<ClientDto> list(Client.Status status) {
+    /*public List<ClientDto> list(Client.Status status) {
         List<Client> src = (status == null)
                 ? repo.findAll()
                 : repo.findByStatus(status);
         return src.stream().map(ClientMapper::toDto).toList();
+    }*/
+
+    public Page<ClientDto> list(Client.Status status, Pageable pageable) {
+        Page<Client> src = (status == null)
+                ? repo.findAll(pageable)
+                : repo.findByStatus(status, pageable);
+        return src.map(ClientMapper::toDto);
     }
 
     public ClientDto create(CreateClientRequest req) {
